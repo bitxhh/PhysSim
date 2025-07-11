@@ -1,6 +1,7 @@
+#include <cmath>
+#include "Engine.h"
+
 namespace phisics {
-    constexpr double g = 9.80665;
-    constexpr double light_speed = 2.99792458e8;
 
     double potential_energy(double mass, double height) {
         return mass * g * height;

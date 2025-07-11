@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Engine.cpp"
 #include <iomanip>
+#include "Engine.h"
 
 int main() {
     double electron_rest_energy = phisics::rest_energy(9.1e-31);
