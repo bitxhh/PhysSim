@@ -4,23 +4,25 @@ project(Engine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 # Основная программа Engine
 add_executable(Engine
-        "Что-то о физических библиотеках/tests.cpp"
-        "Что-то о физических библиотеках/Engine.cpp"
+        "Всякая хуйня/Что-то о физических библиотеках/tests.cpp"
+        "Всякая хуйня/Что-то о физических библиотеках/Engine.cpp"
 )
 
 # Отдельный исполняемый файл для калькулятора
 add_executable(Calculator
-        Calculator_/Calculator.cpp
+        "Всякая хуйня/Calculator_/Calculator.cpp"
 
 )
 
 # Отдельный исполняемый файл для swap
 add_executable(Swap
-       Swap/swapS.cpp
+       "Всякая хуйня/Swap/swapS.cpp"
 )
 add_executable(classes
-        "Тестовые классы/tests.cpp"
-        "Тестовые классы/particle.cpp"
+        "Моделирование/tests/tests.cpp"
+        "Моделирование/src/particle.cpp"
+        "Моделирование/src/particle_system.cpp"
 )
