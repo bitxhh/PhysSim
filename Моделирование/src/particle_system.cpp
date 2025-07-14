@@ -2,18 +2,19 @@
 #include <iomanip>
 #include "../include/math/phisics.h"
 
-
 particle_system::particle_system(const size_t particle_quantity)
-    : time(0), quantity(particle_quantity) {
+    : time(0), quantity(particle_quantity), window(sfml_window(800, 600)) {
     particles.emplace_back(vec2(0, 100), vec2(0, 0), 10);
     particles.emplace_back(vec2(0.01, 100), vec2(0, 0), 0.01);
 }
 
 void particle_system::simulate (const double total_time, const double dt) {
-    for (double i = 0; i < total_time;) {
-        update(dt);
+    while (window.window.isOpen()) {
+        while (time < total_time){
+            update(dt);
+            show_particle_info(particles[0]);
+        }
         render();
-        i += dt;
     }
 }
 
@@ -47,11 +48,15 @@ void particle_system::update(const double dt) {
             i.velocity.y = -i.velocity.y * i.material_type.restitution;
         }
     }
+    render();
     time += dt;
 }
 
-void particle_system::render() const {
+void particle_system::render() {
+    window.check_for_events();
+}
+void particle_system::show_particle_info(const particle& p) const{
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << "time: " << time << "   " << "pos: " << particles[0].position << std::endl;
+    std::cout << "time: " << time << "   " << "pos: " << p.position << std::endl;
 }
 
