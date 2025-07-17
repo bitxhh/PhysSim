@@ -2,7 +2,11 @@
 
 int main() {
     particle_system system(100);
-    system.simulate(20, 1);
+    for (double i = 0; i<20;) {
+        system.update(0.01);
+        system.show_particle_info(system.particles[0]);
+        i += 0.01;
+    }
 
     return 0;
 }

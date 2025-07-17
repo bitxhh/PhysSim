@@ -11,9 +11,11 @@
 particle::particle(const vec2& initial_position,
     const vec2& initial_velocity,
     const double particle_mass,
+    const vec2& force,
     const material& material_type):
 
     mass(particle_mass),
+    force(force),
     position(initial_position),
     velocity(initial_velocity),
     acceleration(0,0),

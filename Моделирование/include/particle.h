@@ -1,16 +1,19 @@
 #pragma once
 #include "math/my_vector2.h"
 #include "material.h"
+#include "IPhisicsObj.h"
 
-class particle {
+class particle{
 public:
     const double mass;
+    vec2 force;
     vec2 position;
     vec2 velocity;
     vec2 acceleration;
     const double radius;
     const material material_type;
 
-    particle(const vec2& initial_position, const vec2& initial_velocity, double particle_mass,
+    particle(const vec2& initial_position, const vec2& initial_velocity, double particle_mass,  const vec2& force,
         const material& material_type = materials::undefined);
+
 };
