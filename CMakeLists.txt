@@ -26,9 +26,11 @@ add_executable(Swap
 )
 add_executable(classes
         "Моделирование/tests/tests.cpp"
-        "Моделирование/src/particle.cpp"
-        "Моделирование/src/particle_system.cpp"
-        "Моделирование/src/visualize.cpp"
+        "Моделирование/src/core/particle.cpp"
+        "Моделирование/src/core/particle_system.cpp"
+        "Моделирование/src/render/sfml_x.cpp"
+        Моделирование/src/Application.cpp
+        Моделирование/src/render/render_system.cpp
 )
 
 target_link_libraries(classes PRIVATE SFML::Graphics SFML::Window SFML::System)

@@ -2,17 +2,17 @@
 // Created by Илья Чернов on 04.07.2025.
 //
 
-#include "../include/particle.h"
+#include "../../include/core/particle.h"
 #include <stdexcept>
 #include <cmath>
-#include "../include/math/phisics.h"
+#include "../../include/math/phisics.h"
 
 
 particle::particle(const vec2& initial_position,
-    const vec2& initial_velocity,
-    const double particle_mass,
-    const vec2& force,
-    const material& material_type):
+                   const vec2& initial_velocity,
+                   const double particle_mass,
+                   const vec2& force,
+                   const material& material_type):
 
     mass(particle_mass),
     force(force),

@@ -1,5 +1,5 @@
 #pragma once
-#include "../include/particle.h"
+#include "particle.h"
 #include <fstream>
 
 class particle_system {
@@ -7,7 +7,7 @@ class particle_system {
     size_t quantity;
 
 public:
-    std::vector<particle> particles;
+    std::vector<std::unique_ptr<particle>> particles;
     explicit particle_system(size_t particle_quantity);
     void simulate(double total_time, double dt);
     void update(double dt);

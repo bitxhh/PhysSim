@@ -14,3 +14,7 @@ struct materials {
     inline static const auto Rubber = material(1.1, 0.8);
     inline static const auto undefined  = material(0, 1);
 };
+
+struct planets {};
+
+struct planet_info{};
