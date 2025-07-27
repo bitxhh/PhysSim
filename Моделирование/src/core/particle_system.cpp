@@ -6,12 +6,10 @@
 
 particle_system::particle_system(const size_t particle_quantity, const double right, const double bottom)
     : time(0), quantity(particle_quantity), right_boundary(right), bottom_boundary(bottom) {
-    particles.emplace_back(std::make_unique<particle>(
-     vec2{250, bottom-100}, vec2{100, 0}, 1, vec2{0, 0}));
-
-    particles.emplace_back(std::make_unique<particle>(
-        vec2{150, bottom-200}, vec2{200, 0}, 1, vec2{0, 0}));
-
+    for (int i = 0; i < particle_quantity; ++i) {
+        add_random_particle();
+    }
+    quantity -= particle_quantity;
 }
 
 void particle_system::simulate(const double total_time, const double dt) {
@@ -78,7 +76,42 @@ void particle_system::update(const double dt) {
     time += dt;
 }
 
+void particle_system::update_parallel(const double dt)
+{
+    // TODO: реализовать параллельный апдейт.
+    // Сейчас просто перенаправляем на последовательный вариант,
+    // чтобы вызывающий код уже мог пользоваться этим методом.
+    update(dt);
+}
+
+
 void particle_system::show_particle_info(const particle &p) const {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "time: " << time << "   " << "pos: " << p.position << std::endl;
 }
+
+
+
+size_t particle_system::add_particle(vec2 pos, vec2 vel,
+                                     double m, vec2 force)
+{
+    particles.emplace_back(std::make_unique<particle>(pos,vel,m,force));
+    ++quantity;
+    return particles.size()-1;
+}
+
+size_t particle_system::add_random_particle()
+{
+    particles.push_back(std::make_unique<particle>(width, height));
+    ++quantity;
+    return particles.size()-1;
+}
+
+void particle_system::remove_particle(size_t id)
+{
+    if(id>=particles.size()) return;            // safety
+    particles[id].swap(particles.back());
+    particles.pop_back();
+    --quantity;
+}
+

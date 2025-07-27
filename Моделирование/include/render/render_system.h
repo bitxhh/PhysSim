@@ -13,7 +13,6 @@ public:
     static std::unique_ptr<render_system>
     create(const std::string& backend, unsigned width, unsigned height);
 
-
     const unsigned int heights;
 
     const unsigned int width;

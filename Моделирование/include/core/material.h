@@ -4,7 +4,7 @@ struct material {
     const double density;
     const double friction;
     const double restitution;
-    explicit material(const double density, const double friction = 1, const double restitution = 0.5)
+    explicit material(const double density, const double friction = 1, const double restitution = 1)
         : density(density), friction(friction), restitution(restitution) {}
 };
 
