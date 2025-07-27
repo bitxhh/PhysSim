@@ -24,13 +24,13 @@ add_executable(Calculator
 add_executable(Swap
        "Всякая хуйня/Swap/swapS.cpp"
 )
-add_executable(classes
+add_executable(Modeling
         "Моделирование/tests/tests.cpp"
         "Моделирование/src/core/particle.cpp"
         "Моделирование/src/core/particle_system.cpp"
         "Моделирование/src/render/sfml_x.cpp"
-        Моделирование/src/Application.cpp
-        Моделирование/src/render/render_system.cpp
+        "Моделирование/src/Application.cpp"
+        "Моделирование/src/render/render_system.cpp"
 )
 
-target_link_libraries(classes PRIVATE SFML::Graphics SFML::Window SFML::System)
+target_link_libraries(Modeling PRIVATE SFML::Graphics SFML::Window SFML::System)

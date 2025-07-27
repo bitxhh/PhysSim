@@ -1,14 +1,17 @@
 #include "../../include/core/particle_system.h"
 #include <iomanip>
 #include "../../include/math/phisics.h"
+#include "../../include/core/material.h"
+#include "../../include/settings.h"
 
-particle_system::particle_system(const size_t particle_quantity)
-    : time(0), quantity(particle_quantity) {
+particle_system::particle_system(const size_t particle_quantity, const double right, const double bottom)
+    : time(0), quantity(particle_quantity), right_boundary(right), bottom_boundary(bottom) {
     particles.emplace_back(std::make_unique<particle>(
-     vec2{550, 800-100}, vec2{0, 0}, 10.0, vec2{0, 0}));
+     vec2{250, bottom-100}, vec2{100, 0}, 1, vec2{0, 0}));
 
     particles.emplace_back(std::make_unique<particle>(
-        vec2{450, 800-400}, vec2{0, 0}, 0.01, vec2{0, 0}));
+        vec2{150, bottom-200}, vec2{200, 0}, 1, vec2{0, 0}));
+
 }
 
 void particle_system::simulate(const double total_time, const double dt) {
@@ -17,16 +20,35 @@ void particle_system::simulate(const double total_time, const double dt) {
     }
 }
 
-void particle_system::addGlobalForce() {
+void particle_system::box_constraint(const std::unique_ptr<particle>&i) const {
+    if (i->position.y > bottom_boundary-(i->radius+minimal_radius)) {
+        i->position.y = bottom_boundary-(i->radius+minimal_radius);
+        i->velocity.y = -i->velocity.y * i->material_type.restitution;
+    }
+    if (i->position.x > right_boundary-(i->radius+minimal_radius)) {
+        i->position.x = right_boundary-(i->radius+minimal_radius);
+        i->velocity.x = -i->velocity.x * i->material_type.restitution;
+    }
+    if (i->position.y < i->radius+minimal_radius) {
+        i->position.y = i->radius+minimal_radius;
+        i->velocity.y = -i->velocity.y * i->material_type.restitution;
+    }
+    if (i->position.x < i->radius+minimal_radius) {
+        i->position.x = i->radius+minimal_radius;
+        i->velocity.x = -i->velocity.x * i->material_type.restitution;
+    }
+}
+
+void particle_system::addGlobalForce() const {
     for (const std::unique_ptr<particle>&i: particles) {
         i->acceleration += phisics::g;
     }
 }
 
-void particle_system::addPairForce() {
+void particle_system::addPairForce() const {
     for (const std::unique_ptr<particle>&i: particles) {
         for (const std::unique_ptr<particle>&j: particles) {
-            if (&i == &j) continue;
+            if (i.get() == j.get()) continue;
 
             vec2 r_vec = j->position - i->position;
             const double distance_squared = r_vec.x * r_vec.x + r_vec.y * r_vec.y;
@@ -37,23 +59,20 @@ void particle_system::addPairForce() {
             }
         }
         i->acceleration += i->force / i->mass;
+        i->force.reset();
     }
 }
 
 void particle_system::update(const double dt) {
-    addGlobalForce();
     addPairForce();
-
+    addGlobalForce();
 
     for (const std::unique_ptr<particle>&i: particles) {
-        i->position -= i->velocity * dt + i->acceleration * dt * dt * 0.5;
-        i->velocity -= i->acceleration * dt;
+        i->position += i->velocity * dt + i->acceleration * dt * dt * 0.5;
+        i->velocity += i->acceleration * dt;
 
+        box_constraint(i);
 
-        if (i->position.y > 775) {
-            i->position.y = 775;
-            i->velocity.y = -i->velocity.y * i->material_type.restitution;
-        }
         i->acceleration.reset();
     }
     time += dt;
