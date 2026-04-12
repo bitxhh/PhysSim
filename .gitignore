@@ -1,0 +1,7 @@
+build/
+*.dSYM/
+.DS_Store
+cmake-build-*/
+*.user
+.idea/
+.claude/
