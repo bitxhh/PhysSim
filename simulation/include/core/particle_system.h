@@ -1,6 +1,8 @@
 #pragma once
 #include "particle.h"
 #include <fstream>
+#include <vector>
+#include <memory>
 
 class particle_system {
     double time;
