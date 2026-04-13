@@ -1,32 +1,45 @@
 #pragma once
 #include "particle.h"
-#include <fstream>
+#include "../forces/force_field.h"
+#include "../collisions/collision_algo.h"
 #include <vector>
 #include <memory>
 
-class particle_system {
-    double time;
-    size_t quantity;
-    double right_boundary;
-    double bottom_boundary;
+class integrator;   // forward — чтобы не тащить полный заголовок
+
+class ParticleSystem2D {
+    double time = 0.0;
 
 public:
-    std::vector<std::unique_ptr<particle>> particles;
-    explicit particle_system(size_t particle_quantity, double right, double bottom);
+    double width;
+    double height;
+    std::vector<std::unique_ptr<ForceField>>    forces;
+    std::vector<std::unique_ptr<CollisionAlgo>> collision_algos;
+    std::vector<std::unique_ptr<particle>>      particles;
 
-    //Симуляция
-    void simulate(double total_time, double dt);
-    void update(double dt);
-    void update_parallel(double dt);
+    explicit ParticleSystem2D(double right, double bottom);
 
-    //Утилиты
-    void show_particle_info(const particle& p) const;
-    void box_constraint(const std::unique_ptr<particle>&i) const;
-    void addGlobalForce() const;
-    void addPairForce() const;
+    void add_force(std::unique_ptr<ForceField> f)         { forces.push_back(std::move(f)); }
+    void add_collision_algo(std::unique_ptr<CollisionAlgo> a) { collision_algos.push_back(std::move(a)); }
 
-    //Управление частицами
-    auto add_random_particle() -> size_t;
-    auto add_particle(vec2 pos, vec2 vel, double m, vec2 force = {}) -> size_t;
-    void remove_particle(size_t id);
+    // Главный шаг: делегирует в интегратор
+    void step(double dt, integrator& integ);
+
+    // --- Вычисление сил (вызывается из интеграторов) ---
+    void compute_forces();
+
+    // --- Разрешение всех коллизий (вызывается из интеграторов) ---
+    void resolve_all_collisions();
+
+    // --- Управление частицами ---
+    size_t add_particle(vec2 pos, vec2 vel, double mass,
+                        double radius, const material& mat = materials::undefined);
+
+    size_t add_random_particle();
+    void   remove_particle(size_t id);
+
+    // --- Утилиты ---
+    void   show_particle_info(const particle& p) const;
+    double get_time() const { return time; }
+    size_t count() const { return particles.size(); }
 };
